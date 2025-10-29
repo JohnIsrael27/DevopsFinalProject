@@ -1,5 +1,5 @@
 import json
-from app import app
+from chatbot.app import app
 
 def test_health():
     client = app.test_client()
