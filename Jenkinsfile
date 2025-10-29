@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    IMAGE_NAME = "your-dockerhub-username/chatbot-demo"
+    IMAGE_NAME = "scizor27/chatbot-demo/chatbot-demo"
     IMAGE_TAG = "${env.BUILD_ID}"
   }
 
