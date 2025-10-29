@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'python:3.11'
+      args '-u root'
+    }
+  }
 
   environment {
     IMAGE_NAME = "scizor27/chatbot-demo/chatbot-demo"
@@ -35,7 +40,6 @@ pipeline {
 
     stage('Push Image') {
       steps {
-        // Requires Docker Hub credentials configured in Jenkins (username/password)
         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
           sh "echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin"
           sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
@@ -45,7 +49,6 @@ pipeline {
 
     stage('Deploy (local docker-compose)') {
       steps {
-        // For demo we redeploy local docker-compose: stop existing, set new image and up
         sh 'docker-compose down || true'
         sh 'docker-compose build chatbot'
         sh 'docker-compose up -d --no-deps chatbot'
